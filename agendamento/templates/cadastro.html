@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="login-container">
+  <div class="login-box">
+    <h2>Cadastro de Usuário</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="id_username">Usuário</label>
+        {{ form.username }}
+      </div>
+      <div class="mb-3">
+        <label for="id_nome_completo">Nome completo</label>
+        {{ form.nome_completo }}
+      </div>
+      <div class="mb-3">
+        <label for="id_congregacao">Congregação</label>
+        {{ form.congregacao }}
+      </div>
+      <div class="mb-3">
+        <label for="id_categoria">Categoria</label>
+        {{ form.categoria }}
+      </div>
+      <div class="mb-3">
+        <label for="id_password1">Senha</label>
+        {{ form.password1 }}
+      </div>
+      <div class="mb-3">
+        <label for="id_password2">Confirme a senha</label>
+        {{ form.password2 }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Ainda não há sua congregação?
+      <a href="{% url 'cadastrar_congregacao' %}" class="text-white">Cadastre aqui</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
