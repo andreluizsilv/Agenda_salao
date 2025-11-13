@@ -3,45 +3,52 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  overflow: auto;
-  position: relative;
   color: #333;
+  position: relative;
+  overflow: hidden; /* sem rolagem em telas grandes */
 }
 
 /* --- Fundo e overlay --- */
-body::before {
+body::before,
+body::after {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
   background-image: url("../images/SalaoDoReino.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   filter: brightness(0.7);
-  z-index: -2;
+  z-index: 0;
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(5px); /* efeito de desfoque */
+  backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: -1;
+  z-index: 1;
 }
 
-/* --- Container central --- */
-.login-container {
+/* --- Estrutura da página --- */
+body > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   padding: 1rem;
 }
 
@@ -104,8 +111,43 @@ body::after {
   color: #aad4ff;
 }
 
+/* --- Rodapé --- */
+footer {
+  text-align: center;
+  padding: 0.8rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem;
+}
+
 /* --- Animação suave --- */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 🔹 Responsividade (mobile e tablet) --- */
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto; /* permite rolar em telas pequenas */
+  }
+
+  .main-content {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .login-box {
+    width: 90%;
+    padding: 2rem 1.5rem;
+    margin: 1rem auto;
+  }
+
+  footer {
+    font-size: 0.8rem;
+  }
 }

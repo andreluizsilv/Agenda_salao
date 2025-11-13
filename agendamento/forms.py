@@ -42,6 +42,21 @@ class UsuarioCreationForm(UserCreationForm):
         widget=forms.Select(attrs={"class": "form-select"})
     )
 
+    username = forms.CharField(
+        label="Usuário",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+
+    password1 = forms.CharField(
+        label="Senha",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    password2 = forms.CharField(
+        label="Confirme a senha",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
     class Meta:
         model = User
         fields = ("username", "nome_completo", "congregacao", "password1", "password2")
