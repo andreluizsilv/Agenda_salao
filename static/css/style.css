@@ -1,3 +1,6 @@
+/* --------------------------
+   RESET / BASE
+--------------------------- */
 html, body {
   height: 100%;
   margin: 0;
@@ -5,10 +8,14 @@ html, body {
   font-family: 'Poppins', sans-serif;
   color: #333;
   position: relative;
-  overflow: hidden; /* sem rolagem em telas grandes */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-/* --- Fundo e overlay --- */
+/* --------------------------
+   FUNDO + DESFOQUE
+--------------------------- */
 body::before,
 body::after {
   content: "";
@@ -32,12 +39,19 @@ body::after {
   z-index: 1;
 }
 
-/* --- Estrutura da página --- */
 body > * {
   position: relative;
   z-index: 2;
 }
 
+/* Ajuste geral por causa da navbar */
+body {
+  padding-top: 70px;
+}
+
+/* --------------------------
+   ESTRUTURA
+--------------------------- */
 .page-wrapper {
   display: flex;
   flex-direction: column;
@@ -52,7 +66,9 @@ body > * {
   padding: 1rem;
 }
 
-/* --- Caixa de login --- */
+/* --------------------------
+   LOGIN / CADASTRO BOX
+--------------------------- */
 .login-box {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(15px);
@@ -102,16 +118,169 @@ body > * {
   box-shadow: 0 4px 10px rgba(13, 110, 253, 0.4);
 }
 
-.login-box a {
-  color: #fff;
-  text-decoration: underline;
+/* --------------------------
+   MENSAGENS
+--------------------------- */
+.messages-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1050;
+  width: 300px;
 }
 
-.login-box a:hover {
-  color: #aad4ff;
+.fade-message {
+  animation: fadeOut 5s forwards;
 }
 
-/* --- Rodapé --- */
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* --------------------------
+   CAIXA PRINCIPAL (CONTENT BOX)
+--------------------------- */
+.content-box {
+  background: rgba(255, 255, 255, 0.88);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.content-box h3 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* --------------------------
+   FORMULÁRIOS PADRONIZADOS
+--------------------------- */
+.content-box form .mb-3 {
+  margin-bottom: 18px;
+}
+
+.content-box label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.content-box input.form-control,
+.content-box select.form-select {
+  height: 42px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.content-box input.form-control:focus,
+.content-box select.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+}
+
+.content-box button.btn-primary {
+  margin-top: 10px;
+  height: 45px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* --------------------------
+   BOTÕES DE HORÁRIO
+--------------------------- */
+.horario-btn {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    border: none;
+    color: #fff;
+    text-align: center;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+/* Texto do horário */
+.hora {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+/* Informações extras (nome, congregação, você) */
+.info {
+    font-size: 0.95rem;
+    margin-top: 3px;
+    opacity: 0.9;
+}
+
+/* ======== ESTADOS ======== */
+.horario-disponivel {
+    background: #198754; /* verde */
+}
+
+.horario-ocupado {
+    background: #dc3545; /* vermelho */
+}
+
+.horario-seu {
+    background: #0d6efd; /* azul */
+}
+
+/* Hover */
+.horario-btn:hover:not(.disabled-btn) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* Botão desabilitado */
+.disabled-btn {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Layout dos cards */
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+}
+.btn-dia {
+    font-size: 1.4rem;              /* aumenta os números */
+    font-weight: 600;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border-width: 2px;
+    color: #0d6efd;                 /* azul padrão bootstrap */
+    border-color: #0d6efd;
+    transition: all 0.25s ease;
+}
+
+.btn-dia:hover {
+    background-color: #28a745 !important;  /* verde elegante */
+    color: white !important;
+    border-color: #28a745 !important;
+    transform: translateY(-3px);           /* leve animação premium */
+}
+
+/* --------------------------
+   RODAPÉ
+--------------------------- */
 footer {
   text-align: center;
   padding: 0.8rem;
@@ -122,32 +291,29 @@ footer {
   font-size: 0.9rem;
 }
 
-/* --- Animação suave --- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- 🔹 Responsividade (mobile e tablet) --- */
+/* --------------------------
+   RESPONSIVIDADE
+--------------------------- */
 @media (max-width: 768px) {
-  html, body {
-    overflow-y: auto; /* permite rolar em telas pequenas */
-  }
-
   .main-content {
     align-items: flex-start;
-    justify-content: center;
     padding-top: 3rem;
     padding-bottom: 3rem;
   }
 
-  .login-box {
+  .login-box,
+  .content-box {
     width: 90%;
     padding: 2rem 1.5rem;
-    margin: 1rem auto;
   }
+}
+.user-info-bar {
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem; /* aumenta a fonte */
+    font-weight: 600;
+}
 
-  footer {
-    font-size: 0.8rem;
-  }
+.user-info-bar .user-name {
+    font-size: 1.2rem; /* maior que o resto */
+    display: inline-block;
 }

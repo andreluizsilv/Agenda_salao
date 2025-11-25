@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Escolher Dia{% endblock %}
+
+{% block content %}
+<h3 class="titulo-horarios text-center mb-4">{{ mes_nome }} / {{ ano }}</h3>
+
+<div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+  {% for d in dias %}
+    <a href="{% url 'escolher_horario' ano mes d %}" class="btn btn-dia">
+      {{ d }}
+    </a>
+  {% endfor %}
+</div>
+
+<div class="text-center mt-3">
+  <a href="{% url 'escolher_mes' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

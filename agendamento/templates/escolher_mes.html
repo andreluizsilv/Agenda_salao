@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Escolher Mês{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+  {% for m in meses %}
+    <div class="col-md-6 mb-3">
+      <div class="card p-3 text-center">
+        <h5>{{ m.nome }} {{ m.ano }}</h5>
+        <a href="{% url 'escolher_dia' m.ano m.numero %}" class="btn btn-primary mt-2">Ver dias</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

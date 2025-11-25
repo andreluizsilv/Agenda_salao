@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Editar Agendamento{% endblock %}
+
+{% block content %}
+<h3 class="text-center mb-4">Editar Agendamento</h3>
+
+<form method="POST" class="content-box">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="data">Nova data</label>
+    <input type="date" name="data" class="form-control" value="{{ ag.data }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="horario">Novo horário</label>
+    <input type="time" name="horario" class="form-control" value="{{ ag.horario|time:'H:i' }}">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{% url 'meus_agendamentos' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

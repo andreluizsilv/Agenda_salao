@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load dictget %}
+
+{% block content %}
+<h3 class="titulo-horarios">Horários — {{ data|date:"d/m/Y" }}</h3>
+
+<p class="subinfo-horarios text-center">
+  <span class="text-success fw-bold">Verde = livre</span> /
+  <span class="text-danger fw-bold">Vermelho = ocupado</span>
+</p>
+
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="horarios-grid">
+
+    {% for h in horarios %}
+
+    {# --- Se for edição e este é o horário atual do usuário --- #}
+    {% if ag_editando and h == ag_editando.horario|time:"H:i" %}
+        <button type="button"
+        class="btn btn-primary horario-btn disabled-btn"
+        disabled>
+    <span class="hora">{{ h }}</span>
+    <span class="info">Seu horário</span>
+</button>
+
+
+    {# --- Se está ocupado, mas é de outra pessoa --- #}
+    {% elif h in ocupados %}
+        {% with dado=detalhes|dictget:h %}
+            <button type="button"
+                    class="btn btn-danger horario-btn disabled-btn"
+                    disabled
+                    title="{{ dado|dictget:'usuario' }} ({{ dado|dictget:'congregacao' }})">
+
+                <span class="hora">{{ h }}</span>
+                <span class="info">{{ dado|dictget:'usuario' }} ({{ dado|dictget:'congregacao' }})</span>
+            </button>
+        {% endwith %}
+
+    {# --- Horário livre --- #}
+    {% else %}
+        <button type="submit"
+                name="horario"
+                value="{{ h }}"
+                class="btn btn-success horario-btn">
+            <span class="hora">{{ h }}</span>
+            <span class="info">Disponível</span>
+        </button>
+    {% endif %}
+
+{% endfor %}
+  </div>
+</form>
+
+<div class="text-center mt-4">
+  <a href="{% url 'escolher_dia' data.year data.month %}" class="btn btn-secondary">
+    Voltar
+  </a>
+</div>
+{% endblock %}

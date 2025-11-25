@@ -1,62 +1,33 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from agendamento.models import Congregacao
+from .models import Congregacao
 
 User = get_user_model()
 
 
-class CongregacaoForm(forms.ModelForm):
-    class Meta:
-        model = Congregacao
-        fields = ["nome", "responsavel"]
-        labels = {
-            "nome": "Nome da Congregação",
-            "responsavel": "Responsável",
-        }
-        widgets = {
-            "nome": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Digite o nome da congregação"
-            }),
-            "responsavel": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": "Digite o nome do responsável"
-            }),
-        }
-
-
 class UsuarioCreationForm(UserCreationForm):
-    nome_completo = forms.CharField(
-        max_length=200,
-        required=True,
-        label="Nome completo",
-        widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-
+    nome_completo = forms.CharField(max_length=200, required=True, label="Nome completo",
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
     congregacao = forms.ModelChoiceField(
         queryset=Congregacao.objects.all(),
         required=False,
-        empty_label="Selecione a congregação",
         label="Congregação",
         widget=forms.Select(attrs={"class": "form-select"})
-    )
-
-    username = forms.CharField(
-        label="Usuário",
-        widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-
-    password1 = forms.CharField(
-        label="Senha",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
-    )
-
-    password2 = forms.CharField(
-        label="Confirme a senha",
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
     )
 
     class Meta:
         model = User
         fields = ("username", "nome_completo", "congregacao", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get("nome_completo", "")
+        if commit:
+            user.save()
+            # criar profile
+            from .models import UsuarioProfile
+            perfil, created = UsuarioProfile.objects.get_or_create(user=user)
+            perfil.congregacao = self.cleaned_data.get("congregacao")
+            perfil.save()
+        return user
