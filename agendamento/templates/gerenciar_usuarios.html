@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Gerenciar Usuários{% endblock %}
+
+{% block content %}
+<h3 class="text-center mb-4">Gerenciar Usuários — {{ congregacao }}</h3>
+
+<table class="table table-bordered table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Nome</th>
+            <th>Usuário</th>
+            <th>Congregação</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for u in usuarios %}
+        <tr>
+            <td>{{ u.user.get_full_name }}</td>
+            <td>{{ u.user.username }}</td>
+            <td>{{ u.congregacao.nome }}</td>
+
+            <td>
+                {% if u.is_active %}
+                    <span class="badge bg-success">Ativo</span>
+                {% else %}
+                    <span class="badge bg-danger">Inativo</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if u.user.is_superuser %}
+                    <span class="text-muted">Superusuário protegido</span>
+                {% else %}
+                    <form method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ u.id }}">
+
+                        {% if u.is_active %}
+                            <button name="acao" value="desativar" class="btn btn-danger btn-sm">
+                                Desativar
+                            </button>
+                        {% else %}
+                            <button name="acao" value="ativar" class="btn btn-success btn-sm">
+                                Ativar
+                            </button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -93,17 +93,18 @@ body {
   color: #f5f5f5;
 }
 
-.form-control {
+.login-box .form-control {
   background-color: rgba(255, 255, 255, 0.2);
   border: none;
   color: #fff;
 }
 
-.form-control:focus {
+.login-box .form-control:focus {
   background-color: rgba(255, 255, 255, 0.25);
   color: #fff;
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.3);
 }
+
 
 .btn-primary {
   width: 100%;
@@ -316,4 +317,36 @@ footer {
 .user-info-bar .user-name {
     font-size: 1.2rem; /* maior que o resto */
     display: inline-block;
+}
+
+/* Estilo do link do Admin */
+.admin-link {
+    color: #ffc107 !important; /* amarelo padrão */
+    font-weight: 600;
+    transition: 0.25s ease-in-out;
+}
+
+/* Ícone animado */
+.admin-link i {
+    transition: transform 0.25s ease-in-out;
+}
+
+/* Hover: muda cor, cresce o ícone, fundo leve */
+.admin-link:hover {
+    color: #28a745 !important; /* verde */
+    background-color: rgba(40, 167, 69, 0.15);
+    border-radius: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.content-box .form-control,
+.content-box .form-select {
+    color: #000;
+    background-color: #fff;
+}
+
+
+.admin-link:hover i {
+    transform: scale(1.15);
 }
