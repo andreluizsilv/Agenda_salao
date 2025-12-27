@@ -14,53 +14,47 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm fixed-top">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
 
-                    {% if user.is_authenticated %}
-                        <a class="navbar-brand fw-semibold" href="{% url 'escolher_mes' %}">Agendar horarios</a>
-                        {# --- LINK APENAS PARA ADMIN DA CONGREGAÇÃO --- #}
-                        {% if user.profile and user.profile.is_admin_congregacao %}
-                            <li class="nav-item">
-                                <a class="nav-link admin-link" href="{% url 'gerenciar_usuarios' %}">
-                                    <i class="bi bi-people-fill me-1"></i> Gerenciar Usuários
-                                </a>
-                            </li>
+        {% include "navbar.html" %}
+        {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert
+            {% if message.tags == 'error' %}
+                alert-danger
+            {% elif message.tags == 'success' %}
+                alert-success
+            {% elif message.tags == 'warning' %}
+                alert-warning
+            {% elif message.tags == 'info' %}
+                alert-info
+            {% else %}
+                alert-secondary
+            {% endif %}
+            alert-dismissible fade show d-flex align-items-center gap-2
+        ">
 
-                            <li class="nav-item">
-                                <a class="nav-link admin-link" href="{% url 'criar_bloqueio' %}">
-                                    <i class="bi bi-calendar-x me-1"></i> Bloquear Horários
-                                </a>
-                            </li>
-                        {% endif %}
+          {% if message.tags == 'error' %}
+            <i class="bi bi-x-circle-fill"></i>
+          {% elif message.tags == 'success' %}
+            <i class="bi bi-check-circle-fill"></i>
+          {% elif message.tags == 'warning' %}
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          {% elif message.tags == 'info' %}
+            <i class="bi bi-info-circle-fill"></i>
+          {% else %}
+            <i class="bi bi-info-circle"></i>
+          {% endif %}
 
+          <span>{{ message }}</span>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'meus_agendamentos' %}">Meus Agendamentos</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
-                        </li>
-
-                    {% else %}
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-
-                    {% endif %}
-                </ul>
-            </div>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    </nav>
+      {% endfor %}
+    </div>
+{% endif %}
+
+
 
     <div class="page-wrapper">
         <!-- CONTEÚDO PRINCIPAL -->
@@ -87,5 +81,27 @@
 
     <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Tempo antes de desaparecer (em milissegundos)
+    const tempoMensagem = 4000; // 4 segundos
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const alerts = document.querySelectorAll(".alert");
+
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                // Efeito fade
+                alert.classList.add("fade");
+                alert.style.opacity = "0";
+
+                // Remove do DOM após animação
+                setTimeout(() => {
+                    alert.remove();
+                }, 500); // tempo da transição
+            }, tempoMensagem);
+        });
+    });
+</script>
+
 </body>
 </html>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Editar Bloqueio — {{ bloqueio.congregacao.nome }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Dia da semana</label>
+            <select name="dia_semana" class="form-select">
+                {% for value, label in bloqueio.DIAS_SEMANA %}
+                    <option value="{{ value }}" {% if bloqueio.dia_semana == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Início</label>
+                <select name="hora_inicio" class="form-select">
+                    {% for h in horarios %}
+                        <option value="{{ h }}" {% if bloqueio.hora_inicio|stringformat:"H:i" == h %}selected{% endif %}>
+                            {{ h }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Fim</label>
+                <select name="hora_fim" class="form-select">
+                    {% for h in horarios %}
+                        <option value="{{ h }}" {% if bloqueio.hora_fim|stringformat:"H:i" == h %}selected{% endif %}>
+                            {{ h }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Motivo</label>
+            <input type="text" class="form-control" name="motivo" value="{{ bloqueio.motivo }}" required>
+        </div>
+
+        <button class="btn btn-success">💾 Salvar</button>
+        <a href="{% url 'superadmin_bloqueios' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>
+{% endblock %}

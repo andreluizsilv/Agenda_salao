@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta, time
 import calendar
 from .forms import *
 from .models import *
-from .utils import admin_congregacao_required
+from .utils import *
 
 
 User = get_user_model()
@@ -31,7 +31,7 @@ def login_view(request):
             return redirect("escolher_mes")
         messages.error(request, "Usuário ou senha inválidos.")
         return redirect("cadastro")
-    return render(request, "login.html")
+    return render(request, "auth/login.html")
 
 
 def logout_view(request):
@@ -55,7 +55,7 @@ def cadastro(request):
     else:
         form = UsuarioCreationForm()
 
-    return render(request, "cadastro.html", {"form": form})
+    return render(request, "auth/cadastro.html", {"form": form})
 
 
 # helper para adicionar meses sem dependency externa
@@ -78,14 +78,14 @@ def escolher_mes(request):
             "ano": data.year,
             "nome": MESES_PT[data.month - 1]
         })
-    return render(request, "escolher_mes.html", {"meses": meses})
+    return render(request, "agenda/escolher_mes.html", {"meses": meses})
 
 
 @login_required
 def escolher_dia(request, ano, mes):
     dias_no_mes = calendar.monthrange(ano, mes)[1]
     dias = list(range(1, dias_no_mes + 1))
-    return render(request, "escolher_dia.html", {"ano": ano, "mes": mes, "dias": dias, "mes_nome": MESES_PT[mes-1]})
+    return render(request, "agenda/escolher_dia.html", {"ano": ano, "mes": mes, "dias": dias, "mes_nome": MESES_PT[mes-1]})
 
 
 @login_required
@@ -154,7 +154,7 @@ def escolher_horario(request, ano, mes, dia):
 
                 detalhes[h] = {
                     "usuario": "Indisponível",
-                    "congregacao": b.motivo,
+                    "congregacao": f"{b.motivo} {perfil_user.congregacao.nome}",
                 }
 
     # =====================================================
@@ -214,7 +214,7 @@ def escolher_horario(request, ano, mes, dia):
     # =====================================================
     return render(
         request,
-        "escolher_horario.html",
+        "agenda/escolher_horario.html",
         {
             "data": dt,
             "horarios": horarios,
@@ -229,7 +229,7 @@ def escolher_horario(request, ano, mes, dia):
 def meus_agendamentos(request):
     hoje = date.today()
     ags = Agendamento.objects.filter(usuario=request.user, data__gte=hoje).order_by("data", "horario")
-    return render(request, "meus_agendamentos.html", {"agendamentos": ags})
+    return render(request, "agenda/meus_agendamentos.html", {"agendamentos": ags})
 
 
 @login_required
@@ -239,7 +239,7 @@ def cancelar_agendamento(request, id):
         ag.delete()
         messages.success(request, "Agendamento cancelado.")
         return redirect("meus_agendamentos")
-    return render(request, "confirmar_cancelamento.html", {"ag": ag})
+    return render(request, "agenda/confirmar_cancelamento.html", {"ag": ag})
 
 
 @login_required
@@ -268,7 +268,6 @@ def gerenciar_usuarios_congregacao(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
         acao = request.POST.get("acao")
-
         perfil = get_object_or_404(UsuarioProfile, id=user_id)
 
         # Segurança extra
@@ -278,48 +277,198 @@ def gerenciar_usuarios_congregacao(request):
 
         # Ativar ou desativar
         if acao == "ativar":
+            if perfil.is_admin_congregacao and not request.user.profile.is_superadmin:
+                messages.error(request, "Somente o SuperAdmin pode ativar Admin de Congregação.")
+                return redirect("gerenciar_usuarios")
+
             perfil.is_active = True
             perfil.user.is_active = True
             perfil.user.save()
             perfil.save()
             messages.success(request, f"{perfil.user.get_full_name()} foi ativado.")
 
+
         elif acao == "desativar":
+
+            # impedindo que admin_congregacao se desative
+
+            if perfil.user == request.user:
+                messages.error(request, "Você não pode desativar a si mesmo. Apenas o SuperAdmin pode fazer isso.")
+
+                return redirect("gerenciar_usuarios")
+
+            # apenas superadmin pode desativar admins
+
+            if perfil.is_admin_congregacao and not request.user.profile.is_superadmin:
+                messages.error(request, "Somente o SuperAdmin pode desativar outro Admin de Congregação.")
+
+                return redirect("gerenciar_usuarios")
+
             perfil.is_active = False
+
             perfil.user.is_active = False
+
             perfil.user.save()
+
             perfil.save()
+
             messages.success(request, f"{perfil.user.get_full_name()} foi desativado.")
 
         return redirect("gerenciar_usuarios")
 
-    return render(request, "gerenciar_usuarios.html", {
+    return render(request, "admin/gerenciar_usuarios.html", {
         "usuarios": usuarios,
         "congregacao": congregacao_atual.nome
     })
+
 
 @login_required
 @admin_congregacao_required
 def criar_bloqueio(request):
     admin = request.user.profile
 
+    horarios = []
+    t = datetime.combine(date.today(), time(7, 0))
+    fim = datetime.combine(date.today(), time(21, 0))
+
+    while t <= fim:
+        horarios.append(t.strftime("%H:%M"))
+        t += timedelta(minutes=30)
+
     if request.method == "POST":
-        hora_inicio = request.POST["hora_inicio"]
-        hora_fim = request.POST["hora_fim"]
-
-        if hora_fim <= hora_inicio:
-            messages.error(request, "A hora final deve ser maior que a inicial.")
-            return redirect("criar_bloqueio")
-
         BloqueioAgenda.objects.create(
             congregacao=admin.congregacao,
             dia_semana=request.POST["dia_semana"],
-            hora_inicio=hora_inicio,
-            hora_fim=hora_fim,
+            hora_inicio=datetime.strptime(
+                request.POST["hora_inicio"], "%H:%M"
+            ).time(),
+            hora_fim=datetime.strptime(
+                request.POST["hora_fim"], "%H:%M"
+            ).time(),
             motivo=request.POST["motivo"],
         )
 
-        messages.success(request, "Horário reservado com sucesso.")
-        return redirect("criar_bloqueio")
+        messages.success(request, "Horário bloqueado com sucesso.")
+        return redirect("listar_bloqueios")
 
-    return render(request, "criar_bloqueio.html")
+    return render(request, "admin/criar_bloqueio.html", {
+        "horarios": horarios
+    })
+
+@login_required
+@admin_congregacao_required
+def listar_bloqueios(request):
+    congregacao = request.user.profile.congregacao
+
+    bloqueios = BloqueioAgenda.objects.filter(
+        congregacao=congregacao
+    ).order_by("dia_semana", "hora_inicio")
+
+    return render(request, "admin/listar_bloqueios.html", {
+        "bloqueios": bloqueios
+    })
+
+
+@login_required
+@admin_congregacao_required
+def editar_bloqueio(request, id):
+    bloqueio = get_object_or_404(
+        BloqueioAgenda,
+        id=id,
+        congregacao=request.user.profile.congregacao
+    )
+
+    horarios = []
+    t = datetime.combine(date.today(), time(7, 0))
+    fim = datetime.combine(date.today(), time(21, 0))
+    while t <= fim:
+        horarios.append(t.strftime("%H:%M"))
+        t += timedelta(minutes=30)
+
+    if request.method == "POST":
+        bloqueio.dia_semana = request.POST["dia_semana"]
+        bloqueio.hora_inicio = datetime.strptime(
+            request.POST["hora_inicio"], "%H:%M"
+        ).time()
+        bloqueio.hora_fim = datetime.strptime(
+            request.POST["hora_fim"], "%H:%M"
+        ).time()
+        bloqueio.motivo = request.POST["motivo"]
+
+        bloqueio.save()
+        messages.success(request, "Bloqueio atualizado com sucesso.")
+        return redirect("listar_bloqueios")
+
+    return render(request, "admin/editar_bloqueio.html", {
+        "bloqueio": bloqueio,
+        "horarios": horarios
+    })
+
+
+@login_required
+@admin_congregacao_required
+def excluir_bloqueio(request, id):
+    bloqueio = get_object_or_404(
+        BloqueioAgenda,
+        id=id,
+        congregacao=request.user.profile.congregacao
+    )
+
+    bloqueio.delete()
+    messages.success(request, "Bloqueio removido com sucesso.")
+    return redirect("listar_bloqueios")
+
+
+@login_required
+@superadmin_required
+def listar_todos_bloqueios(request):
+    bloqueios = BloqueioAgenda.objects.all().select_related("congregacao")
+
+    return render(request, "superadmin/superadmin_bloqueios.html", {
+        "bloqueios": bloqueios
+    })
+
+
+# =========================================================
+# SUPERADMIN — EDITAR BLOQUEIO
+# =========================================================
+@login_required
+@superadmin_required
+def superadmin_editar_bloqueio(request, id):
+    bloqueio = get_object_or_404(BloqueioAgenda, id=id)
+
+    # gerar lista de horários
+    horarios = []
+    t = datetime.combine(date.today(), time(7, 0))
+    fim = datetime.combine(date.today(), time(21, 0))
+    while t <= fim:
+        horarios.append(t.strftime("%H:%M"))
+        t += timedelta(minutes=30)
+
+    if request.method == "POST":
+        bloqueio.congregacao = bloqueio.congregacao  # não muda
+        bloqueio.dia_semana = request.POST["dia_semana"]
+        bloqueio.hora_inicio = datetime.strptime(request.POST["hora_inicio"], "%H:%M").time()
+        bloqueio.hora_fim = datetime.strptime(request.POST["hora_fim"], "%H:%M").time()
+        bloqueio.motivo = request.POST["motivo"]
+        bloqueio.save()
+
+        messages.success(request, "Bloqueio atualizado com sucesso.")
+        return redirect("superadmin_bloqueios")
+
+    return render(request, "superadmin/superadmin_editar_bloqueio.html", {
+        "bloqueio": bloqueio,
+        "horarios": horarios,
+    })
+
+
+# =========================================================
+# SUPERADMIN — EXCLUIR BLOQUEIO
+# =========================================================
+@login_required
+@superadmin_required
+def superadmin_excluir_bloqueio(request, id):
+    bloqueio = get_object_or_404(BloqueioAgenda, id=id)
+    bloqueio.delete()
+    messages.success(request, "Bloqueio removido com sucesso.")
+    return redirect("superadmin_bloqueios")

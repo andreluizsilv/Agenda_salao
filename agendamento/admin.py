@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Congregacao)
 admin.site.register(UsuarioProfile)
 admin.site.register(Agendamento)
+admin.site.register(BloqueioAgenda)

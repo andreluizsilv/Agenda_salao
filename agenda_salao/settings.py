@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -129,4 +130,27 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Painel Administrativo",
+    "site_header": "Gestão da Congregação",
+    "site_brand": "SuperAdmin",
+    "welcome_sign": "Bem-vindo ao Painel de Administração",
+    "copyright": "Seu Nome / Sua Congregação",
+
+    # Ícones do menu
+    "icons": {
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+
+    # Exigir login primeiro
+    "login_logo": "img/logo.png",
+    "login_logo_dark": "img/logo_dark.png",
+
+    # 🔥 LINK PARA VOLTAR AO SISTEMA DE AGENDAMENTO
+    "topmenu_links": [
+        {"name": "Voltar ao Sistema", "url": "/", "new_window": False},
+    ],
+}
 

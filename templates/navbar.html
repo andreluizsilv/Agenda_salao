@@ -1,0 +1,94 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 shadow-sm fixed-top">
+  <div class="container">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+
+        {# ----------------------------------------------- #}
+        {# 1) Visitante                                    #}
+        {# ----------------------------------------------- #}
+        {% if not user.is_authenticated %}
+
+          {% if request.resolver_match.url_name == "login" %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'cadastro' %}">Cadastro</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+          {% endif %}
+
+        {# ----------------------------------------------- #}
+        {# 2) SuperAdmin                                   #}
+        {# ----------------------------------------------- #}
+        {% elif user.is_authenticated and user.profile.is_superadmin %}
+          <li class="nav-item">
+              <a class="nav-link" href="/admin/">
+                  <i class="bi bi-speedometer2"></i> SuperAdmin
+              </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+          </li>
+
+        {# ----------------------------------------------- #}
+        {# 3) Administrador da congregação                 #}
+        {# ----------------------------------------------- #}
+        {% elif user.profile.is_admin_congregacao %}
+          <li class="nav-item">
+            <a class="nav-link admin-link" href="{% url 'gerenciar_usuarios' %}">
+              <i class="bi bi-people-fill me-1"></i> Gerenciar Usuários
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link admin-link" href="{% url 'criar_bloqueio' %}">
+              <i class="bi bi-calendar-x me-1"></i> Bloquear Horários </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link admin-link" href="{% url 'listar_bloqueios' %}">
+              <i class="bi bi-calendar-x"></i> Lista de Bloqueio </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'escolher_mes' %}">Agendar Agora</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'meus_agendamentos' %}">Meus Agendamentos</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+          </li>
+
+        {# ----------------------------------------------- #}
+        {# 4) Usuário comum                                #}
+        {# ----------------------------------------------- #}
+        {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'escolher_mes' %}">Agendar Agora</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'meus_agendamentos' %}">Meus Agendamentos</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+          </li>
+
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -15,5 +15,13 @@ urlpatterns = [
     path("agendamento/editar/<int:id>/", views.editar_agendamento, name="editar_agendamento"),
 
     path("admin-congregacao/usuarios/", views.gerenciar_usuarios_congregacao, name="gerenciar_usuarios"),
-    path("admin-congregacao/bloqueios/", views.criar_bloqueio, name="criar_bloqueio"),
+    path("admin-congregacao/bloqueios/criar", views.criar_bloqueio, name="criar_bloqueio"),
+    path("admin-congregacao/bloqueios/", views.listar_bloqueios, name="listar_bloqueios"),
+    path("admin-congregacao/bloqueios/editar/<int:id>/", views.editar_bloqueio, name="editar_bloqueio"),
+    path("admin-congregacao/bloqueios/excluir/<int:id>/", views.excluir_bloqueio, name="excluir_bloqueio"),
+
+    path("superadmin/bloqueios/", views.listar_todos_bloqueios, name="superadmin_bloqueios"),
+    path("superadmin/bloqueios/editar/<int:id>/", views.superadmin_editar_bloqueio, name="superadmin_editar_bloqueio"),
+    path("superadmin/bloqueios/excluir/<int:id>/", views.superadmin_excluir_bloqueio, name="superadmin_excluir_bloqueio"),
+
 ]

@@ -16,24 +16,31 @@ class UsuarioProfile(models.Model):
     congregacao = models.ForeignKey(Congregacao, on_delete=models.SET_NULL, null=True, blank=True)
     is_admin_congregacao = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_superadmin = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.get_full_name() or self.user.username
+        return f'Nome:{self.user.get_full_name() or self.user.username}, Nome da Congregação:{self.congregacao.nome}'
 
 
 class Agendamento(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="agendamentos")
+    congregacao = models.ForeignKey(Congregacao, on_delete=models.CASCADE, null=True, blank=True)
+
     data = models.DateField()
     horario = models.TimeField()
     criado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("data", "horario")  # evita duplicidade (salão compartilhado)
+        unique_together = ("congregacao", "data", "horario")  # evita choque entre congregações diferentes
         ordering = ["data", "horario"]
 
     def __str__(self):
-        return f"{self.data} {self.horario} - {self.usuario.username}"
+        try:
+            nome_congregacao = self.usuario.profile.congregacao.nome if self.usuario.profile.congregacao else "Sem Congregação"
+        except UsuarioProfile.DoesNotExist:
+            nome_congregacao = "Perfil não encontrado"
 
+        return f"Nome:{self.usuario.username}, Congregação:{nome_congregacao}, Data:{self.data}, Horário:{self.horario}"
 
 
 class BloqueioAgenda(models.Model):
@@ -68,4 +75,4 @@ class BloqueioAgenda(models.Model):
     ativo = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.get_dia_semana_display()} {self.hora_inicio}–{self.hora_fim}"
+        return f"Dia Semana:{self.get_dia_semana_display()}, Horário Inicio:{self.hora_inicio}, Horário Fim:{self.hora_fim}, Motivo:{self.motivo}, Nome da Congregação: {self.congregacao.nome}"
