@@ -24,4 +24,7 @@ urlpatterns = [
     path("superadmin/bloqueios/editar/<int:id>/", views.superadmin_editar_bloqueio, name="superadmin_editar_bloqueio"),
     path("superadmin/bloqueios/excluir/<int:id>/", views.superadmin_excluir_bloqueio, name="superadmin_excluir_bloqueio"),
 
+    path('sobre/', views.sobre_view, name='sobre'),
+    path('ajuda/', views.ajuda_view, name='ajuda'),
+
 ]

@@ -8,15 +8,21 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons (que você já tem) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Font Awesome (adicione esta linha) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS Global -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-        {% include "navbar.html" %}
-        {% if messages %}
+    {% include "navbar.html" %}
+
+    {% if messages %}
     <div class="container mt-3">
       {% for message in messages %}
         <div class="alert
@@ -52,9 +58,7 @@
         </div>
       {% endfor %}
     </div>
-{% endif %}
-
-
+    {% endif %}
 
     <div class="page-wrapper">
         <!-- CONTEÚDO PRINCIPAL -->
@@ -81,6 +85,11 @@
 
     <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts Customizados -->
+    {% block extra_js %}
+    {% endblock %}
+
     <script>
     // Tempo antes de desaparecer (em milissegundos)
     const tempoMensagem = 4000; // 4 segundos
@@ -100,6 +109,14 @@
                 }, 500); // tempo da transição
             }, tempoMensagem);
         });
+
+        // Inicializa tooltips (se houver)
+        if (typeof bootstrap !== 'undefined') {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
     });
 </script>
 

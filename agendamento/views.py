@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from datetime import datetime, date, timedelta, time
@@ -9,15 +8,17 @@ from .forms import *
 from .models import *
 from .utils import *
 
-
 User = get_user_model()
 
 MESES_PT = [
-    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ]
 
 
+# =========================================================
+#             USUÁRIOS COMUM
+# =========================================================
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("escolher_mes")
@@ -43,22 +44,74 @@ def cadastro(request):
     if request.user.is_authenticated:
         return redirect("escolher_mes")
 
+    # Verifica se é o PRIMEIRO usuário
+    primeiro_usuario = User.objects.count() == 0
+
     if request.method == "POST":
-        form = UsuarioCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Conta criada com sucesso. Faça login.")
-            print("okcadastro")
-            return redirect("login")
+        # Usa o form apropriado
+        if primeiro_usuario:
+            form = PrimeiroUsuarioForm(request.POST)
         else:
-            messages.error(request, "Corrija os erros abaixo.")
+            form = UsuarioCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.first_name = form.cleaned_data.get("nome_completo", "")
+            user.save()
+
+            from .models import UsuarioProfile, Congregacao
+
+            if primeiro_usuario:
+                # PRIMEIRO USUÁRIO = SUPERADMIN
+                # Cria congregação com o nome fornecido
+                nome_congregacao = form.cleaned_data.get('nome_congregacao', 'Congregação Principal')
+                congregacao = Congregacao.objects.create(
+                    nome=nome_congregacao
+                )
+
+                # Cria perfil de SUPERADMIN
+                UsuarioProfile.objects.create(
+                    user=user,
+                    congregacao=congregacao,
+                    is_admin_congregacao=True,
+                    is_superadmin=True,
+                    is_active=True
+                )
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                login(request, user)
+                messages.success(request,
+                                 f"🎉 CONTA CRIADA COMO SUPERADMIN! "
+                                 f"Congregação '{nome_congregacao}' criada."
+                                 )
+                print(f"👑 PRIMEIRO USUÁRIO '{user.username}' CRIADO COMO SUPERADMIN")
+                return redirect("escolher_mes")
+
+            else:
+                # USUÁRIO NORMAL
+                congregacao = form.cleaned_data.get("congregacao")
+                UsuarioProfile.objects.create(
+                    user=user,
+                    congregacao=congregacao,
+                    is_admin_congregacao=False,
+                    is_superadmin=False,
+                    is_active=True
+                )
+                messages.success(request, "Conta criada com sucesso!")
+
+            return redirect("login")
+
     else:
-        form = UsuarioCreationForm()
+        # Renderiza o form apropriado
+        if primeiro_usuario:
+            form = PrimeiroUsuarioForm()
+        else:
+            form = UsuarioCreationForm()
 
-    return render(request, "auth/cadastro.html", {"form": form})
+    return render(request, "auth/cadastro.html", {
+        "form": form,
+        "primeiro_usuario": primeiro_usuario
+    })
 
-
-# helper para adicionar meses sem dependency externa
 def add_months(dt: date, months: int) -> date:
     month = dt.month - 1 + months
     year = dt.year + month // 12
@@ -67,6 +120,9 @@ def add_months(dt: date, months: int) -> date:
     return date(year, month, day)
 
 
+# =========================================================
+#          USUÁRIOS COMUM - LOGADO
+# =========================================================
 @login_required
 def escolher_mes(request):
     hoje = date.today().replace(day=1)
@@ -253,6 +309,9 @@ def editar_agendamento(request, id):
     )
 
 
+# =========================================================
+#              ADMIN CONGREGACONAL
+# =========================================================
 @login_required
 @admin_congregacao_required
 def gerenciar_usuarios_congregacao(request):
@@ -419,6 +478,9 @@ def excluir_bloqueio(request, id):
     return redirect("listar_bloqueios")
 
 
+# =========================================================
+#                    SUPERADMIN
+# =========================================================
 @login_required
 @superadmin_required
 def listar_todos_bloqueios(request):
@@ -429,9 +491,6 @@ def listar_todos_bloqueios(request):
     })
 
 
-# =========================================================
-# SUPERADMIN — EDITAR BLOQUEIO
-# =========================================================
 @login_required
 @superadmin_required
 def superadmin_editar_bloqueio(request, id):
@@ -462,9 +521,6 @@ def superadmin_editar_bloqueio(request, id):
     })
 
 
-# =========================================================
-# SUPERADMIN — EXCLUIR BLOQUEIO
-# =========================================================
 @login_required
 @superadmin_required
 def superadmin_excluir_bloqueio(request, id):
@@ -472,3 +528,15 @@ def superadmin_excluir_bloqueio(request, id):
     bloqueio.delete()
     messages.success(request, "Bloqueio removido com sucesso.")
     return redirect("superadmin_bloqueios")
+
+
+# =========================================================
+#             DOCUMENTAÇÃO DO SISTEMA
+# =========================================================
+def sobre_view(request):
+    """Página sobre o sistema"""
+    return render(request, 'documentacao/sobre.html')
+
+def ajuda_view(request):
+    """Página de ajuda/FAQ"""
+    return render(request, 'documentacao/ajuda.html')

@@ -11,6 +11,7 @@ class Congregacao(models.Model):
         return self.nome
 
 
+# models.py - modifique a classe UsuarioProfile
 class UsuarioProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     congregacao = models.ForeignKey(Congregacao, on_delete=models.SET_NULL, null=True, blank=True)
@@ -18,9 +19,28 @@ class UsuarioProfile(models.Model):
     is_active = models.BooleanField(default=True)
     is_superadmin = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'Nome:{self.user.get_full_name() or self.user.username}, Nome da Congregação:{self.congregacao.nome}'
+    def save(self, *args, **kwargs):
+        # Se for o primeiro perfil sendo criado E não tiver congregacao definida
+        if not self.pk and UsuarioProfile.objects.count() == 0:
+            # Primeiro usuário = superadmin
+            self.is_superadmin = True
+            self.is_admin_congregacao = True
 
+            # Cria uma congregação padrão se não tiver
+            if not self.congregacao:
+                congregacao, created = Congregacao.objects.get_or_create(
+                    nome="Congregação Principal"
+                )
+                self.congregacao = congregacao
+
+            print(f"✅ Perfil de SUPERADMIN criado para {self.user.username}")
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        if self.congregacao:
+            return f'Nome:{self.user.get_full_name() or self.user.username}, Congregação:{self.congregacao.nome}'
+        return f'Nome:{self.user.get_full_name() or self.user.username}'
 
 class Agendamento(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="agendamentos")

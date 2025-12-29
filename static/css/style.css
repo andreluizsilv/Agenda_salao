@@ -1,6 +1,22 @@
-/* --------------------------
-   RESET / BASE
---------------------------- */
+/* ============================================
+   RESET / BASE / VARIÁVEIS
+============================================ */
+:root {
+  --primary-color: #0d6efd;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --dark-color: #212529;
+  --light-color: #f8f9fa;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.25);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -13,9 +29,9 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* --------------------------
-   FUNDO + DESFOQUE
---------------------------- */
+/* ============================================
+   FUNDO COM IMAGEM (SalaoDoReino.jpeg)
+============================================ */
 body::before,
 body::after {
   content: "";
@@ -44,14 +60,14 @@ body > * {
   z-index: 2;
 }
 
-/* Ajuste geral por causa da navbar */
+/* Ajuste para navbar fixa */
 body {
   padding-top: 70px;
 }
 
-/* --------------------------
-   ESTRUTURA
---------------------------- */
+/* ============================================
+   ESTRUTURA PRINCIPAL
+============================================ */
 .page-wrapper {
   display: flex;
   flex-direction: column;
@@ -66,15 +82,15 @@ body {
   padding: 1rem;
 }
 
-/* --------------------------
-   LOGIN / CADASTRO BOX
---------------------------- */
-.login-box {
+/* ============================================
+   LOGIN BOX
+============================================ */
+.login-container {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
   padding: 2.5rem;
   width: 100%;
   max-width: 400px;
@@ -82,86 +98,174 @@ body {
   animation: fadeIn 0.8s ease-out;
 }
 
-.login-box h2 {
+.login-form h3 {
   text-align: center;
   margin-bottom: 1.8rem;
   font-weight: 600;
   color: #fff;
 }
 
-.form-label {
+/* Labels e campos do login */
+.login-form .form-label {
   color: #f5f5f5;
+  font-weight: 500;
 }
 
-.login-box .form-control {
+.login-form .input-group {
   background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.login-form .input-group .input-group-text {
+  background-color: rgba(255, 255, 255, 0.3);
   border: none;
   color: #fff;
 }
 
-.login-box .form-control:focus {
+.login-form .form-control {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  height: 45px;
+}
+
+.login-form .form-control:focus {
   background-color: rgba(255, 255, 255, 0.25);
   color: #fff;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.3);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
+/* Botão mostrar/ocultar senha */
+#togglePassword {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transition: var(--transition-fast);
+}
 
-.btn-primary {
-  width: 100%;
+#togglePassword:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Botão de login */
+.login-form .btn-primary {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  border: none;
   border-radius: 10px;
-  padding: 0.6rem;
+  padding: 12px;
   font-weight: 500;
   transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
-.btn-primary:hover {
+.login-form .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.4);
+  box-shadow: 0 6px 15px rgba(13, 110, 253, 0.4);
+  background: linear-gradient(135deg, #0b5ed7, #0a58ca);
 }
 
-/* --------------------------
-   MENSAGENS
---------------------------- */
-.messages-container {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  z-index: 1050;
-  width: 300px;
+/* Link de cadastro */
+.login-form .btn-outline-success {
+  border-color: rgba(40, 167, 69, 0.5);
+  color: rgba(40, 167, 69, 0.9);
+  transition: var(--transition-normal);
 }
 
-.fade-message {
-  animation: fadeOut 5s forwards;
+.login-form .btn-outline-success:hover {
+  background-color: rgba(40, 167, 69, 0.9);
+  border-color: rgba(40, 167, 69, 0.9);
+  color: white;
 }
 
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
+/* ============================================
+   TOOLTIPS (Estilos gerais)
+============================================ */
+.tooltip {
+  font-family: 'Poppins', sans-serif;
+  z-index: 9999;
 }
 
-/* --------------------------
-   CAIXA PRINCIPAL (CONTENT BOX)
---------------------------- */
+.tooltip-inner {
+  max-width: 300px;
+  padding: 12px 15px;
+  text-align: left;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background-color: rgba(33, 37, 41, 0.95);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+/* Tooltips com cores para diferentes contextos */
+.tooltip-info .tooltip-inner {
+  background-color: rgba(23, 162, 184, 0.95);
+}
+
+.tooltip-success .tooltip-inner {
+  background-color: rgba(25, 135, 84, 0.95);
+}
+
+.tooltip-warning .tooltip-inner {
+  background-color: rgba(255, 193, 7, 0.95);
+  color: var(--dark-color);
+}
+
+.tooltip-danger .tooltip-inner {
+  background-color: rgba(220, 53, 69, 0.95);
+}
+
+/* Ícones de ajuda/informação */
+.fa-info-circle, .fa-question-circle {
+  cursor: help;
+  opacity: 0.8;
+  transition: var(--transition-fast);
+  margin-left: 5px;
+}
+
+.fa-info-circle:hover, .fa-question-circle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Tooltips em formulários */
+.form-label .fa-info-circle {
+  font-size: 0.85em;
+  vertical-align: middle;
+}
+
+/* ============================================
+   CONTENT BOX (Caixa principal)
+============================================ */
 .content-box {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   padding: 25px;
   border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .content-box h3 {
   text-align: center;
   font-weight: 700;
   margin-bottom: 20px;
+  color: var(--dark-color);
 }
 
-/* --------------------------
-   FORMULÁRIOS PADRONIZADOS
---------------------------- */
+/* ============================================
+   FORMULÁRIOS DENTRO DO CONTENT BOX
+============================================ */
 .content-box form .mb-3 {
   margin-bottom: 18px;
 }
@@ -175,19 +279,28 @@ body {
 }
 
 .content-box input.form-control,
-.content-box select.form-select {
+.content-box select.form-select,
+.content-box textarea.form-control {
   height: 42px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   font-size: 1rem;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-fast);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.content-box textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .content-box input.form-control:focus,
-.content-box select.form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+.content-box select.form-select:focus,
+.content-box textarea.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  background-color: white;
 }
 
 .content-box button.btn-primary {
@@ -195,11 +308,17 @@ body {
   height: 45px;
   font-size: 1rem;
   border-radius: 8px;
+  transition: var(--transition-normal);
 }
 
-/* --------------------------
-   BOTÕES DE HORÁRIO
---------------------------- */
+.content-box button.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   BOTÕES DE HORÁRIO (mantido seu estilo)
+============================================ */
 .horario-btn {
     width: 140px;
     height: 140px;
@@ -213,41 +332,43 @@ body {
     text-align: center;
     transition: all 0.25s ease;
     cursor: pointer;
+    position: relative;
 }
 
-/* Texto do horário */
 .hora {
     font-size: 1.35rem;
     font-weight: 700;
 }
 
-/* Informações extras (nome, congregação, você) */
 .info {
     font-size: 0.95rem;
     margin-top: 3px;
     opacity: 0.9;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* ======== ESTADOS ======== */
+/* Estados dos botões de horário */
 .horario-disponivel {
-    background: #198754; /* verde */
+    background: var(--success-color);
 }
 
 .horario-ocupado {
-    background: #dc3545; /* vermelho */
+    background: var(--danger-color);
 }
 
 .horario-seu {
-    background: #0d6efd; /* azul */
+    background: var(--primary-color);
 }
 
-/* Hover */
+/* Hover effects */
 .horario-btn:hover:not(.disabled-btn) {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Botão desabilitado */
 .disabled-btn {
     opacity: 0.55;
     cursor: not-allowed;
@@ -255,33 +376,95 @@ body {
     box-shadow: none !important;
 }
 
-/* Layout dos cards */
 .horarios-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 14px;
 }
+
+/* ============================================
+   BOTÕES DE DIA
+============================================ */
 .btn-dia {
-    font-size: 1.4rem;              /* aumenta os números */
+    font-size: 1.4rem;
     font-weight: 600;
     padding: 12px 18px;
     border-radius: 10px;
     border-width: 2px;
-    color: #0d6efd;                 /* azul padrão bootstrap */
-    border-color: #0d6efd;
-    transition: all 0.25s ease;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: var(--transition-normal);
+    background-color: white;
 }
 
 .btn-dia:hover {
-    background-color: #28a745 !important;  /* verde elegante */
+    background-color: var(--success-color) !important;
     color: white !important;
-    border-color: #28a745 !important;
-    transform: translateY(-3px);           /* leve animação premium */
+    border-color: var(--success-color) !important;
+    transform: translateY(-3px);
 }
 
-/* --------------------------
+/* ============================================
+   USER INFO BAR
+============================================ */
+.user-info-bar {
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.user-info-bar .user-name {
+    font-size: 1.2rem;
+    display: inline-block;
+    color: var(--dark-color);
+}
+
+/* ============================================
+   ADMIN LINKS
+============================================ */
+.admin-link {
+    color: var(--warning-color) !important;
+    font-weight: 600;
+    transition: var(--transition-normal);
+    padding: 5px 8px;
+    border-radius: 6px;
+}
+
+.admin-link i {
+    transition: transform 0.25s ease-in-out;
+}
+
+.admin-link:hover {
+    color: var(--success-color) !important;
+    background-color: rgba(40, 167, 69, 0.15);
+    text-decoration: none;
+}
+
+.admin-link:hover i {
+    transform: scale(1.15);
+}
+
+/* ============================================
+   MENSAGENS (ALERTS)
+============================================ */
+.alert {
+  border-radius: 10px;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(5px);
+}
+
+.alert-dismissible .btn-close {
+  padding: 1rem;
+}
+
+/* ============================================
    RODAPÉ
---------------------------- */
+============================================ */
 footer {
   text-align: center;
   padding: 0.8rem;
@@ -290,65 +473,190 @@ footer {
   backdrop-filter: blur(6px);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 0.9rem;
+  margin-top: auto;
 }
 
-/* --------------------------
+/* ============================================
+   ANIMAÇÕES
+============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+.fade-message {
+  animation: fadeOut 5s forwards;
+}
+
+/* ============================================
    RESPONSIVIDADE
---------------------------- */
+============================================ */
 @media (max-width: 768px) {
   .main-content {
     align-items: flex-start;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
-  .login-box,
+  .login-container,
   .content-box {
-    width: 90%;
-    padding: 2rem 1.5rem;
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .horario-btn {
+    width: 120px;
+    height: 120px;
+  }
+
+  .hora {
+    font-size: 1.2rem;
+  }
+
+  .info {
+    font-size: 0.85rem;
+  }
+
+  .horarios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .btn-dia {
+    font-size: 1.2rem;
+    padding: 10px 15px;
   }
 }
-.user-info-bar {
-    background: rgba(255, 255, 255, 0.8);
-    font-size: 1.1rem; /* aumenta a fonte */
-    font-weight: 600;
+
+@media (max-width: 576px) {
+  body {
+    padding-top: 60px;
+  }
+
+  .content-box {
+    padding: 1.25rem;
+  }
+
+  .login-container {
+    padding: 1.25rem;
+  }
+
+  .horario-btn {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hora {
+    font-size: 1rem;
+  }
+
+  .info {
+    font-size: 0.75rem;
+  }
+
+  .horarios-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.user-info-bar .user-name {
-    font-size: 1.2rem; /* maior que o resto */
-    display: inline-block;
+/* ============================================
+   ESTILOS PARA CADASTRO
+============================================ */
+.cadastro-container {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-/* Estilo do link do Admin */
-.admin-link {
-    color: #ffc107 !important; /* amarelo padrão */
-    font-weight: 600;
-    transition: 0.25s ease-in-out;
+.cadastro-form {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Ícone animado */
-.admin-link i {
-    transition: transform 0.25s ease-in-out;
+/* Botões de mostrar/ocultar senha */
+#togglePassword1, #togglePassword2 {
+    border-left: 1px solid #ced4da;
 }
 
-/* Hover: muda cor, cresce o ícone, fundo leve */
-.admin-link:hover {
-    color: #28a745 !important; /* verde */
-    background-color: rgba(40, 167, 69, 0.15);
-    border-radius: 6px;
-    padding-left: 8px;
-    padding-right: 8px;
+#togglePassword1:hover, #togglePassword2:hover {
+    background-color: #e9ecef;
 }
 
-.content-box .form-control,
-.content-box .form-select {
-    color: #000;
-    background-color: #fff;
+/* Barra de força da senha */
+.password-strength {
+    margin-top: 5px;
 }
 
-
-.admin-link:hover i {
-    transform: scale(1.15);
+.password-strength .progress {
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 5px;
 }
 
+.password-strength .progress-bar {
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
 
+/* Estados de senha */
+.password-match, .password-mismatch {
+    margin-top: 5px;
+}
+
+/* Modal específico para cadastro */
+.modal-cadastro .modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.modal-cadastro .modal-header {
+    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    color: white;
+}
+
+/* Campos com erro */
+.is-invalid {
+    border-color: var(--danger-color) !important;
+}
+
+.is-invalid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Checkbox de termos */
+.form-check-input:checked {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+/* Responsividade para cadastro */
+@media (max-width: 576px) {
+    .cadastro-form {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+
+    .modal-dialog {
+        margin: 1rem;
+    }
+}

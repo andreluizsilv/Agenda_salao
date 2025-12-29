@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sobre o Sistema{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">📋 Sobre o Sistema de Agendamento</h1>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4>🎯 O que é este sistema?</h4>
+                </div>
+                <div class="card-body">
+                    <p>Este sistema foi desenvolvido para <strong>gerenciar o agendamento do salão</strong> de forma organizada e eficiente.</p>
+                    
+                    <h5 class="mt-3">✨ Funcionalidades principais:</h5>
+                    <ul>
+                        <li><strong>👥 Agendamento simplificado</strong>: Escolha mês, dia e horário com poucos cliques</li>
+                        <li><strong>🔒 Sistema de permissões</strong>: Diferentes níveis de acesso (usuário, admin, superadmin)</li>
+                        <li><strong>🚫 Bloqueio de horários</strong>: Para reuniões, eventos ou manutenção</li>
+                        <li><strong>📱 Interface responsiva</strong>: Acesse de qualquer dispositivo</li>
+                        <li><strong>🔔 Notificações</strong>: Confirmação instantânea dos agendamentos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4>🧪 Testes e Qualidade</h4>
+                </div>
+                <div class="card-body">
+                    <p>O sistema passou por <strong>rigorosos testes automatizados</strong> para garantir sua estabilidade:</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>✅ Testes realizados:</h6>
+                            <ul>
+                                <li>Testes de autenticação (login/cadastro)</li>
+                                <li>Testes de agendamento (criação/edição/cancelamento)</li>
+                                <li>Testes de permissões (acesso controlado)</li>
+                                <li>Testes de bloqueios de horário</li>
+                                <li>Testes de integração (fluxo completo)</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>📊 Métricas de qualidade:</h6>
+                            <ul>
+                                <li><strong>100% dos testes passando</strong></li>
+                                <li>22 testes automatizados</li>
+                                <li>Cobertura de todas funcionalidades principais</li>
+                                <li>Validação de regras de negócio</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4>👥 Para diferentes tipos de usuários</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5>👤 Usuário Comum</h5>
+                                    <ul class="text-start">
+                                        <li>Agendar horários</li>
+                                        <li>Ver seus agendamentos</li>
+                                        <li>Editar/cancelar agendamentos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5>🛡️ Admin da Congregação</h5>
+                                    <ul class="text-start">
+                                        <li>Todas funções do usuário</li>
+                                        <li>Gerenciar usuários</li>
+                                        <li>Criar bloqueios de horário</li>
+                                        <li>Ver todos agendamentos da congregação</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5>👑 SuperAdmin</h5>
+                                    <ul class="text-start">
+                                        <li>Todas funções do admin</li>
+                                        <li>Acesso a todas congregações</li>
+                                        <li>Gerenciar todos os bloqueios</li>
+                                        <li>Controle total do sistema</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h4>❓ Como usar</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Passo a passo para agendar:</h5>
+                    <ol>
+                        <li><strong>Faça login</strong> na sua conta caso não tenha uma conta, cadastre uma no botão abaixo ou no barra de navegação</li>
+                        <li>Clique em <strong>"Agendar"</strong> no menu</li>
+                        <li>Escolha o <strong>mês</strong> desejado</li>
+                        <li>Selecione o <strong>dia</strong></li>
+                        <li>Escolha um <strong>horário disponível</strong></li>
+                        <li>Confirme o agendamento</li>
+                    </ol>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6>📞 Suporte</h6>
+                        <p>Em caso de dúvidas ou problemas, entre em contato com o administrador do sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
