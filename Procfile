@@ -1,1 +1,1 @@
-web: gunicorn Agenda_salao.wsgi --log-file -
+web: gunicorn agenda_salao.wsgi --log-file -
