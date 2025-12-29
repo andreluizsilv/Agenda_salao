@@ -1,0 +1,7 @@
+asgiref==3.10.0
+Django==5.2.8
+django-jazzmin==3.0.1
+django-role-permissions==3.2.0
+python-dateutil==2.9.0.post0
+six==1.17.0
+sqlparse==0.5.3
