@@ -1,1 +1,1 @@
-web: gunicorn agenda_salao.wsgi --log-file -
+web: python manage.py migrate && python manage.py createsuperuser && gunicorn agenda_salao.wsgi
