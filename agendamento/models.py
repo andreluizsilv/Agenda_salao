@@ -39,7 +39,7 @@ class UsuarioProfile(models.Model):
 
     def __str__(self):
         if self.congregacao:
-            return f'Nome:{self.user.get_full_name() or self.user.username}, Congregação:{self.congregacao.nome}'
+            return f'Nome Usuario:{self.user.username}  - Nome Completo: {self.user.get_full_name() or self.user.username} -Congregação:{self.congregacao.nome} '
         return f'Nome:{self.user.get_full_name() or self.user.username}'
 
 class Agendamento(models.Model):
