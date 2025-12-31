@@ -660,3 +660,87 @@ footer {
         margin: 1rem;
     }
 }
+
+/* ============================================
+       NAVBAR / ADMIN (Jazzmin / Django)
+============================================ */
+
+/* tamanho geral da navbar */
+.navbar, .navbar-nav, .navbar-item, .navbar-brand {
+    font-size: 1.25rem !important;
+}
+
+/* aumenta os itens e o espaçamento clicável */
+.navbar a.nav-link, .navbar button {
+    padding: 12px 18px !important;
+    font-size: 1.2rem !important;
+}
+
+/* deixa os ícones maiores */
+.navbar i, .menu-icon, .fas, .far, .fa {
+    font-size: 1.5rem !important;
+}
+
+/* botão hambúrguer maior */
+.navbar-toggler {
+    padding: 10px 12px !important;
+    font-size: 1.6rem !important;
+}
+
+/* menu lateral (sidebar) mais confortável */
+.sidebar-menu li a {
+    font-size: 1.15rem !important;
+    padding: 14px 16px !important;
+}
+
+/* ============================================
+   NAVBAR / MENU - MELHORIAS MOBILE
+============================================ */
+
+.navbar,
+.navbar a,
+.navbar-brand,
+.navbar-nav .nav-link {
+    font-size: 1.25rem !important;
+}
+
+.navbar i,
+.navbar .fas,
+.navbar .fa {
+    font-size: 1.6rem !important;
+}
+
+/* Botões e área de toque maior */
+.navbar a,
+.navbar button,
+.navbar-brand {
+    padding: 14px 20px !important;
+}
+
+/* Hamburguer maior */
+.navbar-toggler {
+    padding: 10px 14px !important;
+    font-size: 1.5rem !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .navbar,
+    .navbar a,
+    .navbar-brand,
+    .navbar-nav .nav-link {
+        font-size: 1.4rem !important;
+    }
+
+    .navbar i,
+    .navbar .fas,
+    .navbar .fa {
+        font-size: 1.8rem !important;
+    }
+
+    .navbar a,
+    .navbar button,
+    .navbar-brand {
+        padding: 16px 20px !important;
+    }
+}
