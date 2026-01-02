@@ -15,7 +15,6 @@
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
-  --navbar-color: aquamarine;
 }
 
 html, body {
@@ -744,9 +743,8 @@ footer {
     .navbar-brand {
         padding: 16px 20px !important;
     }
-
-    .navbar {
-    background-color: var(--navbar-color) !important;
 }
 
+.navbar {
+    background-color: aquamarine !important;
 }
