@@ -744,7 +744,48 @@ footer {
         padding: 16px 20px !important;
     }
 }
+/* ============================================
+   NAVBAR – CORES DOS LINKS (AQUAMARINE)
+============================================ */
 
+/* Cor base da navbar */
 .navbar {
     background-color: aquamarine !important;
 }
+
+/* Links normais */
+.navbar .nav-link,
+.navbar .navbar-brand {
+    color: #004b4b !important; /* verde-escuro */
+    font-weight: 600;
+}
+
+/* Ícones dentro dos links */
+.navbar .nav-link i {
+    color: #004b4b !important;
+}
+
+/* Hover */
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+    color: #000 !important;
+    background-color: rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+}
+
+/* Link ativo (página atual) */
+.navbar .nav-link.active {
+    color: #000 !important;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+}
+
+/* Hamburger visível no fundo claro */
+.navbar-toggler {
+    border-color: #004b4b !important;
+}
+
+.navbar-toggler-icon {
+    filter: invert(30%) sepia(30%) saturate(300%) hue-rotate(120deg);
+}
+
