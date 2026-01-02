@@ -4,9 +4,9 @@
 
 <h3 class="text-center mb-4">
     {% if primeiro_usuario %}
-    👑 Configuração Inicial do Sistema
+        👑 Configuração Inicial do Sistema
     {% else %}
-    Cadastro
+        Cadastro
     {% endif %}
 </h3>
 
@@ -17,59 +17,110 @@
 </div>
 {% endif %}
 
-<form method="POST">
-  {% csrf_token %}
+<form method="POST" novalidate>
+    {% csrf_token %}
 
-  {% for field in form %}
-  <div class="mb-3">
-    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% for field in form %}
+    <div class="mb-3">
+        <label for="{{ field.id_for_label }}" class="form-label">
+            {{ field.label }}
+        </label>
 
-    {% if field.name == 'password1' or field.name == 'password2' %}
-    <div class="input-group">
-      {{ field }}
-      <button class="btn btn-outline-secondary" type="button"
-              onclick="togglePassword('{{ field.id_for_label }}', this)">
-        <i class="fas fa-eye"></i>
-      </button>
+        {% if field.name == 'password1' or field.name == 'password2' %}
+        <div class="input-group">
+            {{ field }}
+            <button class="btn btn-outline-secondary" type="button"
+                    onclick="togglePassword('{{ field.id_for_label }}', this)">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+        {% else %}
+            {{ field }}
+        {% endif %}
+
+        {% if field.help_text %}
+            <div class="form-text">{{ field.help_text|safe }}</div>
+        {% endif %}
+
+        {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
     </div>
-    {% else %}
-      {{ field }}
-    {% endif %}
-
-    {% if field.help_text %}
-    <div class="form-text">{{ field.help_text }}</div>
-    {% endif %}
-
-    {% for error in field.errors %}
-      <div class="text-danger small">{{ error }}</div>
     {% endfor %}
-  </div>
-  {% endfor %}
 
-  <button type="submit" class="btn btn-primary w-100">
-    {% if primeiro_usuario %}
-    <i class="fas fa-crown me-2"></i>Criar SuperAdmin
-    {% else %}
-    Criar conta
-    {% endif %}
-  </button>
+    <!-- FEEDBACK DAS SENHAS -->
+    <div id="password-feedback" class="small mt-2"></div>
+
+    <button type="submit" id="submitBtn" class="btn btn-primary w-100 mt-3" disabled>
+        {% if primeiro_usuario %}
+            <i class="fas fa-crown me-2"></i>Criar SuperAdmin
+        {% else %}
+            Criar conta
+        {% endif %}
+    </button>
 </form>
 
 <p class="mt-3 text-center">
-  Já tenho conta? <a href="{% url 'login' %}">Login</a>
+    Já tenho conta? <a href="{% url 'login' %}">Login</a>
 </p>
 
 <script>
 function togglePassword(fieldId, button) {
     const field = document.getElementById(fieldId);
+    const icon = button.querySelector("i");
+
     if (field.type === 'password') {
         field.type = 'text';
-        button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
     } else {
         field.type = 'password';
-        button.innerHTML = '<i class="fas fa-eye"></i>';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
     }
 }
+
+const password1 = document.getElementById("id_password1");
+const password2 = document.getElementById("id_password2");
+const feedback = document.getElementById("password-feedback");
+const submitBtn = document.getElementById("submitBtn");
+
+function checkPasswords() {
+    if (!password1 || !password2) return;
+
+    const p1 = password1.value;
+    const p2 = password2.value;
+
+    // Força da senha (simples e eficiente)
+    let strength = 0;
+    if (p1.length >= 8) strength++;
+    if (/[A-Z]/.test(p1)) strength++;
+    if (/[0-9]/.test(p1)) strength++;
+    if (/[^A-Za-z0-9]/.test(p1)) strength++;
+
+    let strengthMsg = "🔴 Senha fraca";
+    if (strength >= 3) strengthMsg = "🟡 Senha média";
+    if (strength === 4) strengthMsg = "🟢 Senha forte";
+
+    if (p1 && p2 && p1 !== p2) {
+        feedback.innerHTML = "❌ As senhas não coincidem";
+        feedback.className = "text-danger small";
+        submitBtn.disabled = true;
+        return;
+    }
+
+    if (p1.length > 0) {
+        feedback.innerHTML = strengthMsg;
+        feedback.className = "small";
+    }
+
+    if (p1 === p2 && strength >= 3) {
+        submitBtn.disabled = false;
+    } else {
+        submitBtn.disabled = true;
+    }
+}
+
+password1?.addEventListener("input", checkPasswords);
+password2?.addEventListener("input", checkPasswords);
 </script>
 
 {% endblock %}
