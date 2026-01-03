@@ -76,7 +76,7 @@ body {
 
 .main-content {
   flex: 1;
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: center;
   padding: 1rem;
@@ -550,8 +550,17 @@ footer {
   }
 
   .content-box {
-    padding: 1.25rem;
+    padding: 12px;
   }
+
+  .user-table-wrapper {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+
+    .user-table-wrapper table {
+        min-width: 680px;
+    }
 
   .login-container {
     padding: 1.25rem;
