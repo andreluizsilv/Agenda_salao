@@ -801,7 +801,6 @@ footer {
     display: inline-block;
 }
 
-/* Cria as 3 linhas */
 .navbar-toggler-icon::before,
 .navbar-toggler-icon::after {
     content: "";
@@ -820,3 +819,63 @@ footer {
     top: 7px;
 }
 
+/* ============================================
+   GERENCIAMENTO DE USUÁRIOS – MOBILE
+============================================ */
+
+.user-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Ajustes gerais da tabela */
+.user-table-wrapper table {
+    min-width: 720px; /* evita esmagar colunas */
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .user-table-wrapper table {
+        font-size: 0.85rem;
+    }
+
+    .user-table-wrapper th,
+    .user-table-wrapper td {
+        padding: 8px 6px;
+        white-space: nowrap;
+    }
+
+    /* Nome pode quebrar linha */
+    .user-table-wrapper td:nth-child(1) {
+        white-space: normal;
+        min-width: 160px;
+    }
+
+    /* Usuário */
+    .user-table-wrapper td:nth-child(2) {
+        min-width: 120px;
+    }
+
+    /* Congregação */
+    .user-table-wrapper td:nth-child(3) {
+        min-width: 130px;
+    }
+
+    /* Status */
+    .user-table-wrapper td:nth-child(4) {
+        min-width: 90px;
+    }
+
+    /* Ações */
+    .user-table-wrapper td:nth-child(5) {
+        min-width: 140px;
+    }
+
+    /* Botões mais confortáveis no toque */
+    .user-table-wrapper .btn {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
