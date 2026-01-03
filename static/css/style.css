@@ -779,13 +779,44 @@ footer {
     background-color: rgba(0, 0, 0, 0.15);
     border-radius: 6px;
 }
+/* ===========================
+   HAMBURGER VISÍVEL (CLARO)
+=========================== */
 
-/* Hamburger visível no fundo claro */
 .navbar-toggler {
-    border-color: #004b4b !important;
+    border: 2px solid #004b4b;
 }
 
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Remove o ícone padrão */
 .navbar-toggler-icon {
-    filter: invert(30%) sepia(30%) saturate(300%) hue-rotate(120deg);
+    background-image: none;
+    position: relative;
+    width: 24px;
+    height: 2px;
+    background-color: #004b4b;
+    display: inline-block;
+}
+
+/* Cria as 3 linhas */
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background-color: #004b4b;
+    left: 0;
+}
+
+.navbar-toggler-icon::before {
+    top: -7px;
+}
+
+.navbar-toggler-icon::after {
+    top: 7px;
 }
 
