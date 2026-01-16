@@ -2,7 +2,7 @@
 {% block size %}small{% endblock %}
 
 {% block content %}
-<h3>Login</h3>
+<h3 class="text-center mb-4">Login</h3>
 
 <form method="POST">
   {% csrf_token %}
@@ -14,7 +14,13 @@
 
   <div class="mb-3">
     <label>Senha</label>
-    <input class="form-control" type="password" name="password" required>
+    <div class="input-group">
+      <input class="form-control" type="password" name="password" id="password" required>
+      <button class="btn btn-outline-secondary" type="button"
+              onclick="togglePassword()">
+        <i class="fas fa-eye" id="eyeIcon"></i>
+      </button>
+    </div>
   </div>
 
   <button class="btn btn-primary w-100">Entrar</button>
@@ -23,4 +29,21 @@
     Não tem conta? <a href="{% url 'cadastro' %}">Cadastre-se</a>
   </p>
 </form>
+
+<script>
+function togglePassword() {
+    const field = document.getElementById("password");
+    const icon = document.getElementById("eyeIcon");
+
+    if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        field.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
 {% endblock %}
